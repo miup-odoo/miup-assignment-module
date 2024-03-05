@@ -10,6 +10,7 @@
     'data': [
         'security/ir.model.access.csv',
 
+        'views/tms_stock_picking_view.xml',
         'views/tms_stock_transport_view.xml',
         'views/tms_stock_batch_view.xml',
     ],

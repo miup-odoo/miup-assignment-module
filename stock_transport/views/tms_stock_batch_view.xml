@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="tms_stock_batch_view_form" model="ir.ui.view">
+        <field name="name">tms.stock.batch.view.form</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="dock_id" placeholder="eg. Dock A" editable="top"/>
+                <field name="vehicle_id" placeholder="Third Party Provider"/>
+                <field name="vehicle_category_id" placeholder="eg. Semi-truck"/>
+                <field name="max_weight" widget="progressbar" invisible="not vehicle_category_id"/>
+                <field name="max_volume" widget="progressbar" invisible="not vehicle_category_id"   />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tms_stock_batch_view_graph" model="ir.ui.view">
+        <field name="name">tms.stock.batch.view.graph</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <graph string="Inventory Batch Graph" type="bar">
+                <field name="scheduled_date" type="row" interval="day"/>
+                <field name="vehicle_category_id" type="column"/>
+                <field name="id" type="measure" operator="count" string="Count"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="tms_stock_batch_view_gantt" model="ir.ui.view">
+        <field name="name">tms.stock.batch.view.gantt</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <gantt 
+            color="id"
+            date_start="scheduled_date"
+            date_stop="scheduled_date"
+            precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
+            default_group_by="dock_id,vehicle_category_id"
+            decoration-info='state == "draft"'
+            decoration-success="state =='done'">
+            <field name='state'/>
+                <field name="name"/>
+            </gantt>
+        </field>
+    </record>    
+    
+    <record id="stock_picking_batch.stock_picking_batch_action" model="ir.actions.act_window">
+        <field name="name">Inventory Batch</field>
+        <field name="res_model">stock.picking.batch</field>
+        <field name="view_mode">tree,form,kanban,graph,gantt</field>
+    </record>
+
+</odoo>
